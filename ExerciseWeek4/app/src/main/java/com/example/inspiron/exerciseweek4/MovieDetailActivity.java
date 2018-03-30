@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import org.parceler.Parcels;
 import org.w3c.dom.Text;
 
 public class MovieDetailActivity extends AppCompatActivity {

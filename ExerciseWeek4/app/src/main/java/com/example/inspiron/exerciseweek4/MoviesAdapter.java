@@ -18,10 +18,14 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
+
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +48,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
     // Usually involves inflating a layout from XML and returning the holder
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        //Context context = parent.getContext();
+        Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(mContext);
 
         // Inflate the custom layout
@@ -65,6 +69,14 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
         viewHolder.txtvDescription.setText(movie.getOverview());
         Picasso.get().load("http://image.tmdb.org/t/p/w500/" + movie.getPoster_path()).into(viewHolder.imgPoster);
         viewHolder.btnVideo.setBackgroundResource(movie.isVideo(movie.getVideo()) ? R.drawable.button_3_512 : R.drawable.prohibited_155486_640);
+        /*viewHolder.parentLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent detailActivity= new Intent(mContext,MovieDetailActivity.class);
+                detailActivity.putExtra("movie", Parcels.wrap(movie));    // use Parcel to send an object to another activity
+                mContext.startActivity(detailActivity);
+            }
+        });*/
     }
 
     // Returns the total count of items in the list
@@ -80,8 +92,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
         public TextView txtvTitle;
         public TextView txtvDescription;
         public ImageView imgPoster;
-        public ImageButton btnVideo;
-
+        public ImageView btnVideo;
         // We also create a constructor that accepts the entire item row
         // and does the view lookups to find each subview
         public ViewHolder(View itemView) {
@@ -93,23 +104,8 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
             txtvDescription = (TextView) itemView.findViewById(R.id.tvDescription);
             imgPoster = (ImageView) itemView.findViewById(R.id.imgPoster);
             btnVideo = (ImageButton) itemView.findViewById(R.id.imgPlay);
-
         }
-        @Override
-        public void onClick(View view) {
-            int position = getLayoutPosition();
-            Movie movie = mMovies.get(position);
-            //openDetailActivity(movie.getTitle(),movie.getPoster_path(),movie.getOverview(),movie.getRelease_date(),movie.getVote_average());
-            Toast.makeText(mContext, "" + position, Toast.LENGTH_SHORT).show();
-            //((Activity) mContext).getFragmentManager().beginTransaction().replace(R.id.main_content, new Test()).addToBackStack(null).commit();
-            /*FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            Test ta = new Test();
-            fragmentTransaction.add(R.id.main_content, ta);
-            fragmentTransaction.commit();*/
-            jumpToFragment();
-
-        }
-        public void jumpToFragment(){
+        /*public void jumpToFragment(){
             Test t = new Test();
             switchContent(R.id.test1,t);
         }
@@ -123,14 +119,21 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
                 Fragment fragment = f;
                 mainActivity.switchContent(id,fragment);
             }
+        }*/
+
+        @Override
+        public void onClick(View view) {
+            int position = getLayoutPosition();
+            Movie movie = mMovies.get(position);
+            openDetailActivity(movie.getTitle(),movie.getPoster_path(),movie.getOverview(),movie.getRelease_date(),movie.getVote_average());
         }
     }
 
 
-    /*private void openDetailActivity(String title, String path_poster, String overview, String releaseDate, String vote_average)
+    private void openDetailActivity(String title, String path_poster, String overview, String releaseDate, String vote_average)
     {
         Intent i=new Intent(mContext, MovieDetailActivity.class);
-
+        //detailActivity.putExtra("result", Parcels.wrap(result));
         //PACK DATA TO SEND
         i.putExtra("title",title);
         i.putExtra("path_poster",path_poster);
@@ -140,7 +143,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
         //open activity
         mContext.startActivity(i);
 
-    }*/
+    }
 
     /*Context c;
     List<Movie> tvShows;
